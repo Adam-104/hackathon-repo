@@ -1,0 +1,35 @@
+erDiagram
+  USERS ||--o| CANDIDATES : "has profile"
+  USERS ||--o{ JOBS : "recruiter posts"
+  JOBS ||--o{ APPLICATIONS : receives
+  CANDIDATES ||--o{ APPLICATIONS : submits
+  CANDIDATES ||--o{ RESUME_ANALYSIS : "AI results"
+  JOBS ||--o{ RESUME_ANALYSIS : "for job"
+  USERS { bigint id PK
+    string name
+    string email UK
+    string password_hash
+    string role "CANDIDATE|RECRUITER|ADMIN"
+    boolean enabled }
+  CANDIDATES { bigint id PK
+    bigint user_id FK
+    string headline
+    string skills
+    int experience_years
+    longtext resume_text }
+  JOBS { bigint id PK
+    bigint recruiter_id FK
+    string title
+    string company
+    string status "OPEN|CLOSED" }
+  APPLICATIONS { bigint id PK
+    bigint job_id FK
+    bigint candidate_id FK
+    string status
+    int match_score }
+  RESUME_ANALYSIS { bigint id PK
+    bigint candidate_id FK
+    bigint job_id FK
+    string type
+    int score
+    longtext result_json }

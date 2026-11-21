@@ -1,0 +1,776 @@
+{
+ "info": {
+  "name": "SmartRecruit AI",
+  "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+ },
+ "variable": [
+  {
+   "key": "baseUrl",
+   "value": "http://localhost:8080"
+  },
+  {
+   "key": "token",
+   "value": ""
+  }
+ ],
+ "item": [
+  {
+   "name": "Auth",
+   "item": [
+    {
+     "name": "Register candidate",
+     "request": {
+      "method": "POST",
+      "header": [
+       {
+        "key": "Content-Type",
+        "value": "application/json"
+       }
+      ],
+      "url": "{{baseUrl}}/api/auth/register",
+      "auth": {
+       "type": "noauth"
+      },
+      "body": {
+       "mode": "raw",
+       "raw": "{\n  \"name\": \"Cara Candidate\",\n  \"email\": \"cara@example.com\",\n  \"password\": \"Passw0rd!x\",\n  \"role\": \"CANDIDATE\"\n}"
+      }
+     },
+     "event": [
+      {
+       "listen": "test",
+       "script": {
+        "type": "text/javascript",
+        "exec": [
+         "pm.collectionVariables.set('token', pm.response.json().token);"
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "name": "Register recruiter",
+     "request": {
+      "method": "POST",
+      "header": [
+       {
+        "key": "Content-Type",
+        "value": "application/json"
+       }
+      ],
+      "url": "{{baseUrl}}/api/auth/register",
+      "auth": {
+       "type": "noauth"
+      },
+      "body": {
+       "mode": "raw",
+       "raw": "{\n  \"name\": \"Rita HR\",\n  \"email\": \"rita@example.com\",\n  \"password\": \"Passw0rd!x\",\n  \"role\": \"RECRUITER\"\n}"
+      }
+     },
+     "event": [
+      {
+       "listen": "test",
+       "script": {
+        "type": "text/javascript",
+        "exec": [
+         "pm.collectionVariables.set('token', pm.response.json().token);"
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "name": "Login",
+     "request": {
+      "method": "POST",
+      "header": [
+       {
+        "key": "Content-Type",
+        "value": "application/json"
+       }
+      ],
+      "url": "{{baseUrl}}/api/auth/login",
+      "auth": {
+       "type": "noauth"
+      },
+      "body": {
+       "mode": "raw",
+       "raw": "{\n  \"email\": \"rita@example.com\",\n  \"password\": \"Passw0rd!x\"\n}"
+      }
+     },
+     "event": [
+      {
+       "listen": "test",
+       "script": {
+        "type": "text/javascript",
+        "exec": [
+         "pm.collectionVariables.set('token', pm.response.json().token);"
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "name": "Me",
+     "request": {
+      "method": "GET",
+      "header": [
+       {
+        "key": "Content-Type",
+        "value": "application/json"
+       }
+      ],
+      "url": "{{baseUrl}}/api/auth/me",
+      "auth": {
+       "type": "bearer",
+       "bearer": [
+        {
+         "key": "token",
+         "value": "{{token}}",
+         "type": "string"
+        }
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "Jobs",
+   "item": [
+    {
+     "name": "List/search jobs",
+     "request": {
+      "method": "GET",
+      "header": [
+       {
+        "key": "Content-Type",
+        "value": "application/json"
+       }
+      ],
+      "url": "{{baseUrl}}/api/jobs?q=java",
+      "auth": {
+       "type": "noauth"
+      }
+     }
+    },
+    {
+     "name": "Job by id",
+     "request": {
+      "method": "GET",
+      "header": [
+       {
+        "key": "Content-Type",
+        "value": "application/json"
+       }
+      ],
+      "url": "{{baseUrl}}/api/jobs/1",
+      "auth": {
+       "type": "noauth"
+      }
+     }
+    },
+    {
+     "name": "Create job (RECRUITER)",
+     "request": {
+      "method": "POST",
+      "header": [
+       {
+        "key": "Content-Type",
+        "value": "application/json"
+       }
+      ],
+      "url": "{{baseUrl}}/api/jobs",
+      "auth": {
+       "type": "bearer",
+       "bearer": [
+        {
+         "key": "token",
+         "value": "{{token}}",
+         "type": "string"
+        }
+       ]
+      },
+      "body": {
+       "mode": "raw",
+       "raw": "{\n  \"title\": \"Java Developer\",\n  \"company\": \"Acme\",\n  \"location\": \"Hyderabad\",\n  \"description\": \"Build Spring Boot services\",\n  \"requiredSkills\": \"Java, Spring Boot, MySQL\",\n  \"experienceLevel\": \"Junior\"\n}"
+      }
+     }
+    },
+    {
+     "name": "My jobs (RECRUITER)",
+     "request": {
+      "method": "GET",
+      "header": [
+       {
+        "key": "Content-Type",
+        "value": "application/json"
+       }
+      ],
+      "url": "{{baseUrl}}/api/jobs/mine",
+      "auth": {
+       "type": "bearer",
+       "bearer": [
+        {
+         "key": "token",
+         "value": "{{token}}",
+         "type": "string"
+        }
+       ]
+      }
+     }
+    },
+    {
+     "name": "Close job",
+     "request": {
+      "method": "PATCH",
+      "header": [
+       {
+        "key": "Content-Type",
+        "value": "application/json"
+       }
+      ],
+      "url": "{{baseUrl}}/api/jobs/1/status",
+      "auth": {
+       "type": "bearer",
+       "bearer": [
+        {
+         "key": "token",
+         "value": "{{token}}",
+         "type": "string"
+        }
+       ]
+      },
+      "body": {
+       "mode": "raw",
+       "raw": "{\n  \"status\": \"CLOSED\"\n}"
+      }
+     }
+    },
+    {
+     "name": "Applicants (RECRUITER)",
+     "request": {
+      "method": "GET",
+      "header": [
+       {
+        "key": "Content-Type",
+        "value": "application/json"
+       }
+      ],
+      "url": "{{baseUrl}}/api/jobs/1/applications",
+      "auth": {
+       "type": "bearer",
+       "bearer": [
+        {
+         "key": "token",
+         "value": "{{token}}",
+         "type": "string"
+        }
+       ]
+      }
+     }
+    },
+    {
+     "name": "Apply (CANDIDATE)",
+     "request": {
+      "method": "POST",
+      "header": [
+       {
+        "key": "Content-Type",
+        "value": "application/json"
+       }
+      ],
+      "url": "{{baseUrl}}/api/jobs/1/apply",
+      "auth": {
+       "type": "bearer",
+       "bearer": [
+        {
+         "key": "token",
+         "value": "{{token}}",
+         "type": "string"
+        }
+       ]
+      },
+      "body": {
+       "mode": "raw",
+       "raw": "{\n  \"coverNote\": \"Keen to join.\"\n}"
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "Candidate",
+   "item": [
+    {
+     "name": "Get profile",
+     "request": {
+      "method": "GET",
+      "header": [
+       {
+        "key": "Content-Type",
+        "value": "application/json"
+       }
+      ],
+      "url": "{{baseUrl}}/api/candidate/profile",
+      "auth": {
+       "type": "bearer",
+       "bearer": [
+        {
+         "key": "token",
+         "value": "{{token}}",
+         "type": "string"
+        }
+       ]
+      }
+     }
+    },
+    {
+     "name": "Update profile",
+     "request": {
+      "method": "PUT",
+      "header": [
+       {
+        "key": "Content-Type",
+        "value": "application/json"
+       }
+      ],
+      "url": "{{baseUrl}}/api/candidate/profile",
+      "auth": {
+       "type": "bearer",
+       "bearer": [
+        {
+         "key": "token",
+         "value": "{{token}}",
+         "type": "string"
+        }
+       ]
+      },
+      "body": {
+       "mode": "raw",
+       "raw": "{\n  \"phone\": \"9999999999\",\n  \"headline\": \"Java developer\",\n  \"skills\": \"Java, Spring\",\n  \"experienceYears\": 1\n}"
+      }
+     }
+    },
+    {
+     "name": "Upload resume (PDF/TXT)",
+     "request": {
+      "method": "POST",
+      "auth": {
+       "type": "bearer",
+       "bearer": [
+        {
+         "key": "token",
+         "value": "{{token}}",
+         "type": "string"
+        }
+       ]
+      },
+      "body": {
+       "mode": "formdata",
+       "formdata": [
+        {
+         "key": "file",
+         "type": "file",
+         "src": []
+        }
+       ]
+      },
+      "url": "{{baseUrl}}/api/candidate/resume"
+     }
+    },
+    {
+     "name": "My applications",
+     "request": {
+      "method": "GET",
+      "header": [
+       {
+        "key": "Content-Type",
+        "value": "application/json"
+       }
+      ],
+      "url": "{{baseUrl}}/api/applications/mine",
+      "auth": {
+       "type": "bearer",
+       "bearer": [
+        {
+         "key": "token",
+         "value": "{{token}}",
+         "type": "string"
+        }
+       ]
+      }
+     }
+    },
+    {
+     "name": "Set application status (RECRUITER)",
+     "request": {
+      "method": "PATCH",
+      "header": [
+       {
+        "key": "Content-Type",
+        "value": "application/json"
+       }
+      ],
+      "url": "{{baseUrl}}/api/applications/1/status",
+      "auth": {
+       "type": "bearer",
+       "bearer": [
+        {
+         "key": "token",
+         "value": "{{token}}",
+         "type": "string"
+        }
+       ]
+      },
+      "body": {
+       "mode": "raw",
+       "raw": "{\n  \"status\": \"SHORTLISTED\"\n}"
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "AI",
+   "item": [
+    {
+     "name": "1. Analyze resume",
+     "request": {
+      "method": "POST",
+      "header": [
+       {
+        "key": "Content-Type",
+        "value": "application/json"
+       }
+      ],
+      "url": "{{baseUrl}}/api/ai/analyze-resume",
+      "auth": {
+       "type": "bearer",
+       "bearer": [
+        {
+         "key": "token",
+         "value": "{{token}}",
+         "type": "string"
+        }
+       ]
+      },
+      "body": {
+       "mode": "raw",
+       "raw": "{}"
+      }
+     }
+    },
+    {
+     "name": "2. Match resume to job",
+     "request": {
+      "method": "POST",
+      "header": [
+       {
+        "key": "Content-Type",
+        "value": "application/json"
+       }
+      ],
+      "url": "{{baseUrl}}/api/ai/match",
+      "auth": {
+       "type": "bearer",
+       "bearer": [
+        {
+         "key": "token",
+         "value": "{{token}}",
+         "type": "string"
+        }
+       ]
+      },
+      "body": {
+       "mode": "raw",
+       "raw": "{\n  \"jobId\": 1\n}"
+      }
+     }
+    },
+    {
+     "name": "3. Interview questions",
+     "request": {
+      "method": "POST",
+      "header": [
+       {
+        "key": "Content-Type",
+        "value": "application/json"
+       }
+      ],
+      "url": "{{baseUrl}}/api/ai/interview-questions",
+      "auth": {
+       "type": "bearer",
+       "bearer": [
+        {
+         "key": "token",
+         "value": "{{token}}",
+         "type": "string"
+        }
+       ]
+      },
+      "body": {
+       "mode": "raw",
+       "raw": "{\n  \"jobId\": 1\n}"
+      }
+     }
+    },
+    {
+     "name": "4. Improve resume",
+     "request": {
+      "method": "POST",
+      "header": [
+       {
+        "key": "Content-Type",
+        "value": "application/json"
+       }
+      ],
+      "url": "{{baseUrl}}/api/ai/improve-resume",
+      "auth": {
+       "type": "bearer",
+       "bearer": [
+        {
+         "key": "token",
+         "value": "{{token}}",
+         "type": "string"
+        }
+       ]
+      },
+      "body": {
+       "mode": "raw",
+       "raw": "{\n  \"jobId\": 1\n}"
+      }
+     }
+    },
+    {
+     "name": "History",
+     "request": {
+      "method": "GET",
+      "header": [
+       {
+        "key": "Content-Type",
+        "value": "application/json"
+       }
+      ],
+      "url": "{{baseUrl}}/api/ai/history",
+      "auth": {
+       "type": "bearer",
+       "bearer": [
+        {
+         "key": "token",
+         "value": "{{token}}",
+         "type": "string"
+        }
+       ]
+      }
+     }
+    },
+    {
+     "name": "Screen applicant (RECRUITER)",
+     "request": {
+      "method": "POST",
+      "header": [
+       {
+        "key": "Content-Type",
+        "value": "application/json"
+       }
+      ],
+      "url": "{{baseUrl}}/api/ai/applications/1/screen",
+      "auth": {
+       "type": "bearer",
+       "bearer": [
+        {
+         "key": "token",
+         "value": "{{token}}",
+         "type": "string"
+        }
+       ]
+      },
+      "body": {
+       "mode": "raw",
+       "raw": "{}"
+      }
+     }
+    },
+    {
+     "name": "Recruiter question set",
+     "request": {
+      "method": "POST",
+      "header": [
+       {
+        "key": "Content-Type",
+        "value": "application/json"
+       }
+      ],
+      "url": "{{baseUrl}}/api/ai/applications/1/interview-questions",
+      "auth": {
+       "type": "bearer",
+       "bearer": [
+        {
+         "key": "token",
+         "value": "{{token}}",
+         "type": "string"
+        }
+       ]
+      },
+      "body": {
+       "mode": "raw",
+       "raw": "{}"
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "Analytics & Admin",
+   "item": [
+    {
+     "name": "Recruiter analytics",
+     "request": {
+      "method": "GET",
+      "header": [
+       {
+        "key": "Content-Type",
+        "value": "application/json"
+       }
+      ],
+      "url": "{{baseUrl}}/api/analytics/recruiter",
+      "auth": {
+       "type": "bearer",
+       "bearer": [
+        {
+         "key": "token",
+         "value": "{{token}}",
+         "type": "string"
+        }
+       ]
+      }
+     }
+    },
+    {
+     "name": "Admin stats",
+     "request": {
+      "method": "GET",
+      "header": [
+       {
+        "key": "Content-Type",
+        "value": "application/json"
+       }
+      ],
+      "url": "{{baseUrl}}/api/admin/stats",
+      "auth": {
+       "type": "bearer",
+       "bearer": [
+        {
+         "key": "token",
+         "value": "{{token}}",
+         "type": "string"
+        }
+       ]
+      }
+     }
+    },
+    {
+     "name": "Admin users",
+     "request": {
+      "method": "GET",
+      "header": [
+       {
+        "key": "Content-Type",
+        "value": "application/json"
+       }
+      ],
+      "url": "{{baseUrl}}/api/admin/users",
+      "auth": {
+       "type": "bearer",
+       "bearer": [
+        {
+         "key": "token",
+         "value": "{{token}}",
+         "type": "string"
+        }
+       ]
+      }
+     }
+    },
+    {
+     "name": "Disable user",
+     "request": {
+      "method": "PATCH",
+      "header": [
+       {
+        "key": "Content-Type",
+        "value": "application/json"
+       }
+      ],
+      "url": "{{baseUrl}}/api/admin/users/2/enabled",
+      "auth": {
+       "type": "bearer",
+       "bearer": [
+        {
+         "key": "token",
+         "value": "{{token}}",
+         "type": "string"
+        }
+       ]
+      },
+      "body": {
+       "mode": "raw",
+       "raw": "{\n  \"enabled\": false\n}"
+      }
+     }
+    },
+    {
+     "name": "Admin jobs",
+     "request": {
+      "method": "GET",
+      "header": [
+       {
+        "key": "Content-Type",
+        "value": "application/json"
+       }
+      ],
+      "url": "{{baseUrl}}/api/admin/jobs",
+      "auth": {
+       "type": "bearer",
+       "bearer": [
+        {
+         "key": "token",
+         "value": "{{token}}",
+         "type": "string"
+        }
+       ]
+      }
+     }
+    },
+    {
+     "name": "Admin set job status",
+     "request": {
+      "method": "PATCH",
+      "header": [
+       {
+        "key": "Content-Type",
+        "value": "application/json"
+       }
+      ],
+      "url": "{{baseUrl}}/api/admin/jobs/1/status",
+      "auth": {
+       "type": "bearer",
+       "bearer": [
+        {
+         "key": "token",
+         "value": "{{token}}",
+         "type": "string"
+        }
+       ]
+      },
+      "body": {
+       "mode": "raw",
+       "raw": "{\n  \"status\": \"CLOSED\"\n}"
+      }
+     }
+    }
+   ]
+  }
+ ]
+}
