@@ -30,6 +30,16 @@ public class AuthController {
         return auth.login(request);
     }
 
+    @PostMapping("/verify-email")
+    public MessageResponse verifyEmail(@Valid @RequestBody VerifyEmailRequest request) {
+        return auth.verifyEmail(request.token());
+    }
+
+    @PostMapping("/resend-verification")
+    public MessageResponse resendVerification(@Valid @RequestBody EmailRequest request) {
+        return auth.resendVerification(request.email());
+    }
+
     @GetMapping("/me")
     public UserDto me(@AuthenticationPrincipal Jwt jwt) {
         return auth.me(CurrentUser.id(jwt));

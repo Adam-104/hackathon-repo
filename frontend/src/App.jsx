@@ -6,6 +6,7 @@ import Home from './pages/Home'
 import JobDetail from './pages/JobDetail'
 import Login from './pages/Login'
 import Register from './pages/Register'
+import VerifyEmail from './pages/VerifyEmail'
 import Resume from './pages/Resume'
 import MyApplications from './pages/MyApplications'
 import InterviewPrep from './pages/InterviewPrep'
@@ -30,6 +31,7 @@ export default function App() {
         <Route path="/jobs/:id" element={<JobDetail />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/verify-email" element={<VerifyEmail />} />
         <Route path="/resume" element={cand(<Resume />)} />
         <Route path="/applications" element={cand(<MyApplications />)} />
         <Route path="/prep" element={cand(<InterviewPrep />)} />

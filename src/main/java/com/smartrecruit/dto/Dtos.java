@@ -105,4 +105,10 @@ public final class Dtos {
                                java.util.Map<String, Long> byStatus, List<JobStat> perJob, List<SkillStat> topSkills) {}
 
     public record ErrorResponse(String message) {}
+
+    public record MessageResponse(String message) {}
+
+    public record VerifyEmailRequest(@NotBlank(message = "Token is required.") @Size(max = 200) String token) {}
+
+    public record EmailRequest(@NotBlank(message = "Email is required.") @Email(message = "Enter a valid email.") @Size(max = 160) String email) {}
 }

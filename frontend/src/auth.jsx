@@ -19,7 +19,12 @@ export function AuthProvider({ children }) {
     return res.user
   }
   const login = async (email, password) => finish(await api.post('/api/auth/login', { email, password }))
-  const register = async (data) => finish(await api.post('/api/auth/register', data))
+  const register = async (data) => {
+    const res = await api.post('/api/auth/register', data)
+    // No token means the account is waiting for email verification.
+    if (!res.token) return { pending: true, user: res.user }
+    return finish(res)
+  }
   const logout = () => { tokenStore.clear(); setUser(null) }
 
   return <AuthContext.Provider value={{ user, login, register, logout }}>{children}</AuthContext.Provider>

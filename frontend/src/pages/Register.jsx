@@ -3,20 +3,42 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../auth'
 import { useAction } from '../hooks'
 import { Alert } from '../components/Ui'
+import { api } from '../api'
 
 export default function Register() {
   const { register } = useAuth()
   const navigate = useNavigate()
   const [form, setForm] = useState({ name: '', email: '', password: '', role: 'CANDIDATE' })
   const { busy, error, run } = useAction()
+  const [sentTo, setSentTo] = useState('')
+  const [resent, setResent] = useState(false)
   const set = (k) => (e) => setForm({ ...form, [k]: e.target.value })
 
   const submit = (e) => {
     e.preventDefault()
     run(async () => {
-      const user = await register(form)
-      navigate(user.role === 'RECRUITER' ? '/recruiter/jobs' : '/resume')
+      const result = await register(form)
+      if (result.pending) { setSentTo(result.user.email); return }
+      navigate(result.role === 'RECRUITER' ? '/recruiter/jobs' : '/resume')
     })
+  }
+
+  const resend = () => run(async () => {
+    await api.post('/api/auth/resend-verification', { email: sentTo })
+    setResent(true)
+  })
+
+  if (sentTo) {
+    return (
+      <div className="card narrow">
+        <h1>Check your email</h1>
+        <p className="muted">We sent a verification link to <strong>{sentTo}</strong>. Open it to activate your account, then sign in.</p>
+        <Alert>{error}</Alert>
+        {resent && <p className="muted small">A new link is on its way. It can take a minute to arrive.</p>}
+        <button type="button" className="btn block-btn" disabled={busy} onClick={resend}>{busy ? 'Sending…' : 'Resend email'}</button>
+        <p className="muted small center">Wrong address? <Link to="/register" onClick={() => setSentTo('')}>Start again</Link> · <Link to="/login">Sign in</Link></p>
+      </div>
+    )
   }
 
   return (

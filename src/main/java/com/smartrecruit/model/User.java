@@ -29,7 +29,26 @@ public class User {
     @Column(nullable = false)
     private boolean enabled = true;
 
+    /** null means an account created before email verification existed; it counts as verified. */
+    @Column
+    private Boolean emailVerified;
+
+    @Column(length = 64)
+    private String verificationTokenHash;
+
+    @Column
+    private Instant verificationExpiresAt;
+
     public User() {}
+
+    public boolean isEmailVerified() { return emailVerified == null || emailVerified; }
+    public void setEmailVerified(boolean emailVerified) { this.emailVerified = emailVerified; }
+
+    public String getVerificationTokenHash() { return verificationTokenHash; }
+    public void setVerificationTokenHash(String hash) { this.verificationTokenHash = hash; }
+
+    public Instant getVerificationExpiresAt() { return verificationExpiresAt; }
+    public void setVerificationExpiresAt(Instant at) { this.verificationExpiresAt = at; }
 
     public boolean isEnabled() { return enabled; }
     public void setEnabled(boolean enabled) { this.enabled = enabled; }

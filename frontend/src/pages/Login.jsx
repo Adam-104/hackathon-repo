@@ -3,12 +3,14 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../auth'
 import { useAction } from '../hooks'
 import { Alert } from '../components/Ui'
+import { api } from '../api'
 
 export default function Login() {
   const { login } = useAuth()
   const navigate = useNavigate()
   const [form, setForm] = useState({ email: '', password: '' })
   const { busy, error, run } = useAction()
+  const [resent, setResent] = useState(false)
   const set = (k) => (e) => setForm({ ...form, [k]: e.target.value })
 
   const submit = (e) => {
@@ -19,11 +21,22 @@ export default function Login() {
     })
   }
 
+  const needsVerify = error.toLowerCase().includes('verify your email')
+  const resend = () => run(async () => {
+    await api.post('/api/auth/resend-verification', { email: form.email })
+    setResent(true)
+  })
+
   return (
     <form className="card narrow" onSubmit={submit}>
       <h1>Sign in</h1>
       <p className="muted">Stay on top of your career: jobs, applications and AI tools.</p>
       <Alert>{error}</Alert>
+      {needsVerify && (
+        <p className="small">
+          {resent ? 'A new verification link is on its way.' : <button type="button" className="link-btn" onClick={resend}>Resend verification email</button>}
+        </p>
+      )}
       <label>Email<input type="email" value={form.email} onChange={set('email')} autoComplete="email" required /></label>
       <label>Password<input type="password" value={form.password} onChange={set('password')} autoComplete="current-password" required /></label>
       <button className="btn block-btn" disabled={busy}>{busy ? 'Signing in…' : 'Sign in'}</button>
