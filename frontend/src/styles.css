@@ -141,3 +141,9 @@ a{color:var(--blue)}
 @media(max-width:899px){.lhero{grid-template-columns:1fr;padding-top:16px}}
 
 .link-btn { background: none; border: 0; padding: 0; color: var(--blue, #0a66c2); font: inherit; cursor: pointer; text-decoration: underline; }
+
+.pw-wrap { position: relative; display: block; }
+.pw-wrap input { padding-right: 4.2rem; }
+.pw-toggle { position: absolute; right: .5rem; top: 50%; transform: translateY(-50%); background: none; border: 0; padding: .25rem .5rem; color: var(--brand, #0a66c2); font: inherit; font-weight: 600; font-size: .85rem; cursor: pointer; border-radius: 8px; }
+.pw-toggle:hover { background: #eef3fb; }
+.pw-bad { color: #b42318; font-weight: 500; }

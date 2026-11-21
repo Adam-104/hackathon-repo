@@ -4,6 +4,7 @@ import { useAuth } from '../auth'
 import { useAction } from '../hooks'
 import { Alert } from '../components/Ui'
 import { api } from '../api'
+import PasswordField from '../components/PasswordField'
 
 export default function Login() {
   const { login } = useAuth()
@@ -38,7 +39,7 @@ export default function Login() {
         </p>
       )}
       <label>Email<input type="email" value={form.email} onChange={set('email')} autoComplete="email" required /></label>
-      <label>Password<input type="password" value={form.password} onChange={set('password')} autoComplete="current-password" required /></label>
+      <PasswordField label="Password" value={form.password} onChange={set('password')} autoComplete="current-password" required />
       <button className="btn block-btn" disabled={busy}>{busy ? 'Signing in…' : 'Sign in'}</button>
       <p className="muted small center">New to SmartRecruit? <Link to="/register">Join now</Link></p>
     </form>
